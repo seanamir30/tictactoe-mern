@@ -18,6 +18,7 @@ const winningCombinations = [
 const Game = () => {
     const [currentTurn, setCurrentTurn] = useState<'X'|'O'>('X')
     const [currentPlayer, setCurrentPlayer] = useState('')
+    const [isLoading, setLoading] = useState(false)
     const [isDraw, setDraw] = useState(false)
     const [playerNames] = useSearchParams()
     const navigate = useNavigate()
@@ -132,9 +133,11 @@ const Game = () => {
     }
 
     const handleStop = () => {
+        setLoading(true)
         axios.post(`${import.meta.env.VITE_API_URL as string}/v1/matches`, playersData satisfies IMatch)
         .then(() => {
             navigate('/')
+            setLoading(false)
         })
         .catch((error) => {
             console.error(error)
@@ -197,7 +200,7 @@ const Game = () => {
                     <Button onClick={handleContinue}>
                         Continue
                     </Button>
-                    <Button transparent onClick={handleStop}>
+                    <Button transparent disabled={isLoading} onClick={handleStop}>
                         Stop
                     </Button>
                 </div>

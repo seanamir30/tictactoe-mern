@@ -9,6 +9,7 @@ import moment from 'moment'
 
 const Root = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isFetching, setFetching] = useState(true)
     const [playerNames, setPlayerNames] = useState({
         playerOne: '',
         playerTwo: ''
@@ -45,6 +46,7 @@ const Root = () => {
     useEffect(() => {
         axios.get(`${import.meta.env.VITE_API_URL as string}/v1/matches`)
         .then((res) => {
+            setFetching(false)
             setMatchHistory(res.data as MatchInterface[])
         })
         .catch((error) => {
@@ -61,6 +63,9 @@ const Root = () => {
                     Start New Game
                 </Button>
             </section>
+            {isFetching && 
+                <h3 className='font-semibold text-lg'>Loading...</h3>
+            }
             {matchHistory && (
             <section className='w-full xl:w-2/3'>
                 <h3 className='px-2 pb-2 font-semibold text-lg'>Match History</h3>
